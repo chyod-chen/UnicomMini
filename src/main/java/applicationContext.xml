@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+		
+	<!--1. 获取数据源 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+		<property name="driverClassName"><value>com.mysql.jdbc.Driver</value></property>
+		<property name="url">
+			<value>jdbc:mysql://localhost:3306/webshare?useUnicode=true&amp;characterEncoding=UTF-8</value>
+		</property>
+		<property name="username"><value>JX181110</value></property>
+		<property name="password"><value>JX181110</value></property>
+	</bean>	
+      
+		<!-- 2.	拿到SqlSessionFactoryBean工厂生产类 -->
+	<bean id="sessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+		<!-- 3.扫描mybatis包, 接口实现类或者mappers -->
+	<bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.chyod.dao"></property>
+	</bean>
+	
+	<!--4. 包扫描器 -->
+	<context:component-scan	base-package="com.chyod.controller,com.chyod.dao"></context:component-scan>
+	
+	<!-- 5.开启注解扫描 -->
+	<mvc:annotation-driven></mvc:annotation-driven>
+	
+	<!-- 6.视图解析器 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<!--前缀  -->
+		<property name="prefix" value="/jsp/"></property>
+	<!--后缀 -->
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+	
+	<!-- 文件上传的限制 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	     <property name="maxUploadSize" value="104857600" />
+	     <property name="maxInMemorySize" value="4096" />
+	     <property name="defaultEncoding" value="UTF-8"></property>
+	</bean>
+
+</beans>		
